@@ -57,7 +57,7 @@ plt.show()
 
 
 # 6) Sinyale gürültü ekle (gerçek dünya kanalını simüle ediyoruz)
-gurultu_seviyesi = 20
+gurultu_seviyesi = 0.5
 gurultu = gurultu_seviyesi * np.random.normal(0, 1, len(tum_sinyal))
 gurultulu_sinyal = tum_sinyal + gurultu
 
@@ -162,5 +162,79 @@ plt.plot(gurultu_araligi, ber_sonuclari, marker='o', color='#dc2626')
 plt.title('Hata Oranı (BER) vs Gürültü Seviyesi')
 plt.xlabel('Gürültü Seviyesi')
 plt.ylabel('Hata Oranı (BER)')
+plt.grid(alpha=0.3)
+plt.show()
+
+# 10) Constellation Diyagramı - I/Q bileşenlerini hesapla
+def iq_bileseni_hesapla(sembol_sinyali, t, frekans):
+    # I (In-phase) = kosinüs referansıyla korelasyon
+    referans_i = np.cos(2 * np.pi * frekans * t)
+    i_degeri = np.sum(sembol_sinyali * referans_i)
+
+    # Q (Quadrature) = sinüs referansıyla korelasyon
+    referans_q = -np.sin(2 * np.pi * frekans * t)
+    q_degeri = np.sum(sembol_sinyali * referans_q)
+
+    return i_degeri, q_degeri
+
+i_degerleri = []
+q_degerleri = []
+t = np.linspace(0, 1, ornekleme_hizi)
+
+for i in range(sembol_sayisi):
+    baslangic = i * ornekleme_hizi
+    bitis = baslangic + ornekleme_hizi
+    sembol_sinyali = gurultulu_sinyal[baslangic:bitis]
+
+    i_val, q_val = iq_bileseni_hesapla(sembol_sinyali, t, frekans)
+    i_degerleri.append(i_val)
+    q_degerleri.append(q_val)
+
+# Normalize et (görselleştirme için değerleri -1.5 ile 1.5 arasına sıkıştır)
+maks_deger = max(max(np.abs(i_degerleri)), max(np.abs(q_degerleri)))
+i_degerleri = np.array(i_degerleri) / maks_deger
+q_degerleri = np.array(q_degerleri) / maks_deger
+
+# Constellation diyagramını çiz
+plt.figure(figsize=(7, 7))
+plt.scatter(i_degerleri, q_degerleri, color='#2563eb', alpha=0.6, s=60, label='Alınan Semboller')
+
+# İdeal 4 noktayı da göster (kırmızı referans)
+ideal_noktalar = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+for x, y in ideal_noktalar:
+    plt.scatter(x, y, color='#dc2626', s=200, marker='x', linewidths=3)
+
+plt.axhline(0, color='gray', linewidth=0.5)
+plt.axvline(0, color='gray', linewidth=0.5)
+plt.xlim(-1.8, 1.8)
+plt.ylim(-1.8, 1.8)
+plt.gca().set_aspect('equal')
+plt.title(f'Constellation Diyagramı (Gürültü Seviyesi = {gurultu_seviyesi})')
+plt.xlabel('I (In-phase)')
+plt.ylabel('Q (Quadrature)')
+plt.grid(alpha=0.3)
+plt.legend(['Alınan Semboller', 'İdeal Noktalar'])
+plt.show()
+
+from scipy.special import erfc
+
+# 11) Teorik BER formülü ile karşılaştırma
+def teorik_ber_hesapla(gurultu_sev):
+    sinyal_gucu = 0.5
+    if gurultu_sev == 0:
+        return 0
+    snr = (sinyal_gucu * ornekleme_hizi) / (gurultu_sev ** 2)
+    ber = 0.5 * erfc(np.sqrt(snr))
+    return ber
+
+teorik_sonuclar = [teorik_ber_hesapla(g) for g in gurultu_araligi]
+
+plt.figure(figsize=(9, 5))
+plt.plot(gurultu_araligi, ber_sonuclari, marker='o', color='#dc2626', label='Simülasyon (Bizim Sonucumuz)')
+plt.plot(gurultu_araligi, teorik_sonuclar, '--', color='#2563eb', label='Teorik Formül')
+plt.title('Simülasyon vs Teorik BER Karşılaştırması')
+plt.xlabel('Gürültü Seviyesi')
+plt.ylabel('Hata Oranı (BER)')
+plt.legend()
 plt.grid(alpha=0.3)
 plt.show()
