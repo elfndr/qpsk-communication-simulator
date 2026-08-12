@@ -7,11 +7,13 @@ bit_sayisi = 20
 bitler = np.random.randint(0, 2, bit_sayisi)
 print("Gönderilen bitler:", bitler)
 
+
 # 2) Bitleri ikişerli gruplara ayır
 if bit_sayisi % 2 != 0:
     bitler = np.append(bitler, 0)
 bit_ciftleri = bitler.reshape(-1, 2)
 print("İkili gruplar:\n", bit_ciftleri)
+
 
 # 3) Her ikili grubu bir faza (noktaya) çevir
 def bitleri_faza_cevir(cift):
@@ -27,9 +29,6 @@ def bitleri_faza_cevir(cift):
 
 fazlar = np.array([bitleri_faza_cevir(cift) for cift in bit_ciftleri])
 print("Fazlar (radyan):", fazlar)
-
-
-
 
 
 # 4) Her faz için gerçek bir dalga oluştur ve yan yana diz
@@ -54,8 +53,6 @@ plt.grid(alpha=0.3)
 plt.show()
 
 
-
-
 # 6) Sinyale gürültü ekle (gerçek dünya kanalını simüle ediyoruz)
 gurultu_seviyesi = 0.5
 gurultu = gurultu_seviyesi * np.random.normal(0, 1, len(tum_sinyal))
@@ -71,7 +68,6 @@ plt.ylabel('Genlik')
 plt.legend()
 plt.grid(alpha=0.3)
 plt.show()
-
 
 
 # 7) Alıcı taraf: gürültülü sinyalden fazı tahmin et
@@ -115,8 +111,6 @@ hata_orani = hatalar / len(bitler)
 print(f"\nToplam bit sayısı: {len(bitler)}")
 print(f"Yanlış tahmin edilen bit sayısı: {hatalar}")
 print(f"Hata oranı (BER): {hata_orani:.2%}")
-
-
 
 
 # 9) BER vs Gürültü Seviyesi grafiği (eşik etkisini görselleştir)
@@ -164,6 +158,7 @@ plt.xlabel('Gürültü Seviyesi')
 plt.ylabel('Hata Oranı (BER)')
 plt.grid(alpha=0.3)
 plt.show()
+
 
 # 10) Constellation Diyagramı - I/Q bileşenlerini hesapla
 def iq_bileseni_hesapla(sembol_sinyali, t, frekans):
@@ -217,6 +212,7 @@ plt.legend(['Alınan Semboller', 'İdeal Noktalar'])
 plt.show()
 
 from scipy.special import erfc
+
 
 # 11) Teorik BER formülü ile karşılaştırma
 def teorik_ber_hesapla(gurultu_sev):
