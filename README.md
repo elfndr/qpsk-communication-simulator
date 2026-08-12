@@ -1,47 +1,48 @@
 # QPSK Haberleşme Simülasyonu
 
-Python ile geliştirilmiş, uçtan uca bir QPSK (Quadrature Phase Shift Keying)
-modülasyon/demodülasyon simülasyonu. Rastgele bit verisini QPSK ile modüle
-eder, gürültülü bir kanaldan geçirir, demodüle eder ve hata oranını (BER)
-ölçer.
+Python ile geliştirilmiş bir QPSK (Quadrature Phase Shift Keying)
+modülasyon/demodülasyon simülasyonu. Rastgele bir bit dizisini QPSK ile
+modüle eder, gürültülü bir kanaldan geçirir, alıcı tarafında demodüle
+eder ve hata oranını (BER) hesaplar.
 
-## Neler Yapıyor?
-- Rastgele bit dizisi üretir
-- Bitleri QPSK fazlarına (0°, 90°, 180°, 270°) kodlar
-- Fazlardan gerçek sinüs dalgaları oluşturur
-- Kanal gürültüsü ekler (AWGN - Additive White Gaussian Noise benzeri)
-- Korelasyon tabanlı demodülasyon ile orijinal bitleri geri çözer
-- Bit Hata Oranını (BER) hesaplar
-- Farklı gürültü seviyelerinde BER'in nasıl değiştiğini grafikle gösterir
-- I/Q constellation diyagramı çizerek alınan sembollerin ideal noktalara
-  göre dağılımını görselleştirir
-- Simülasyon sonuçlarını teorik QPSK BER formülüyle karşılaştırır
+## Özellikler
 
-## Öne Çıkan Sonuçlar
+- Rastgele bit dizisi üretme
+- Bitleri QPSK fazlarına (0°, 90°, 180°, 270°) kodlama
+- Fazlardan sinüs dalgaları oluşturma
+- Kanal gürültüsü ekleme (AWGN benzeri)
+- Korelasyon tabanlı demodülasyon
+- Bit Hata Oranı (BER) hesaplama
+- Farklı gürültü seviyelerinde BER değişimini gösteren grafik
+- I/Q constellation diyagramı
+- Simülasyon sonuçlarının teorik BER formülüyle karşılaştırılması
 
-**Eşik Etkisi:** Simülasyon, dijital haberleşme sistemlerinin karakteristik
-"eşik etkisini" gösteriyor: belirli bir gürültü seviyesine kadar sistem
-hatasız çalışıyor, o eşiği geçince hata oranı hızla artıyor.
+## Bulgular
 
-**Constellation Diyagramı:** Düşük gürültüde alınan semboller ideal
-noktaların (0°, 90°, 180°, 270°) çok yakınında sıkı bir küme oluştururken,
-yüksek gürültüde noktalar dağılıp komşu bölgelere kayıyor — bu da yüksek
-hata oranının görsel açıklaması.
+**Eşik etkisi:** Gürültü seviyesini kademeli artırdığımda, hata oranı
+doğrusal değil, belirli bir eşiğe kadar sıfırda kalıp sonra aniden
+yükseliyor. Bu, dijital haberleşme sistemlerinin tipik bir davranışı.
 
-**Teorik Formül Karşılaştırması:** Alıcıda kullanılan 100 örnekli
-entegrasyon (matched filter benzeri korelasyon), sistemi standart teorik
-QPSK formülünün varsaydığından daha dayanıklı hale getiriyor. Bu kazancı
-telafi etmek için teorik formüle bir düzeltme çarpanı eklendi; yine de
-iki eğri arasında birebir sayısal örtüşme yerine benzer eğilim (eşik
-davranışı) gözlemleniyor. Tam örtüşme için sinyal gücü normalizasyonunun
-daha titiz hesaplanması gerekir.
+**Constellation diyagramı:** Düşük gürültüde alınan semboller ideal
+noktaların (0°, 90°, 180°, 270°) çok yakınında toplanırken, yüksek
+gürültüde noktalar dağılıp komşu bölgelere kayıyor — yüksek hata
+oranının görsel karşılığı bu.
+
+**Teorik formülle karşılaştırma:** Alıcıda 100 örnek üzerinden yapılan
+entegrasyon (korelasyon), sistemi standart teorik formülün varsaydığından
+daha dayanıklı hale getiriyor. Bunu telafi etmek için formüle bir düzeltme
+çarpanı ekledim; sonuç olarak iki eğri birebir örtüşmüyor ama aynı eşik
+davranışını (genel eğilimi) gösteriyor. Tam sayısal örtüşme için sinyal
+gücü normalizasyonunun daha titiz yapılması gerekiyor.
 
 ## Kurulum
+
 ```bash
 pip install numpy matplotlib scipy
 ```
 
 ## Kullanım
+
 ```bash
 python simulasyon.py
 ```
